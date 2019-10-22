@@ -38,8 +38,8 @@
                                 Login
                                 <v-icon dark right>mdi-check</v-icon>
                               </v-btn>
-                              <v-btn color="error" class="mr-4" @click="reset" >
-                                  Sing Up
+                              <v-btn color="error" class="mr-4" router to="/signin" >
+                                  Sign In
                                 <v-icon dark right>mdi-face</v-icon>
                               </v-btn>
                             </div>
