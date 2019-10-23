@@ -4,7 +4,7 @@
             <v-col>
                 <v-card class="mx-auto mt-10" max-width="344">
                   <v-card-text>
-                        <p class="display-1 text--primary text-center">
+                        <p class="display-1 text--primary text-center animated  rubberBand delay-0.5s">
                          Login 
                         </p>
 
