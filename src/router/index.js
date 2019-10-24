@@ -67,7 +67,7 @@ router.beforeEach((to,from,next) => {
     // check i not logged in
     if (!firebase.auth().currentUser) {
       next({
-        path:'/login',
+        path:'/',
         query:{
           redirect: to.fullPath
         }

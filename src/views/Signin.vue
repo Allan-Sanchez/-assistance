@@ -106,7 +106,7 @@ export default {
                                   title: 'Success',
                                   text: 'User Add successful',
                               });
-                          this.$router.push('/dashboard')
+                           this.$router.go({ path: this.$router.path });
                         },err =>{
                            console.log(err);
                         })

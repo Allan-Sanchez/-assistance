@@ -88,7 +88,7 @@ export default {
                       });
                       // console.log(user.user.email)
                     
-                    this.$router.push('/')
+                     this.$router.go({ path: this.$router.path });
                   },err =>{
                       this.$swal({
                           toast: true,

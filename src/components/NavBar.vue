@@ -14,23 +14,46 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-title class="title text-center">Assistance</v-list-item-title>
-          <v-list-item-subtitle class="text-center">organize</v-list-item-subtitle>
+          <v-list-item-subtitle v-if="!isLoggedIn" class="text-center">organize</v-list-item-subtitle>
+          <v-list-item-subtitle v-else class="text-center">{{currentUser}}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
 
       <v-divider></v-divider>
 
       <v-list dense nav>
-        <v-list-item v-for="item in menuItems" :key="item.title" router :to="item.link" link>
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
+        <div v-if="!isLoggedIn">
+          <v-list-item v-for="item in menuItemsLogout" :key="item.title" router :to="item.link" link>
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
 
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </div>
+        <div v-else>
+          <v-list-item v-for="item in menuItemsLogin" :key="item.title" router :to="item.link" link>
+            <v-list-item-icon>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-icon>
+
+            <v-list-item-content>
+              <v-list-item-title>{{ item.title }}</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </div>
       </v-list>
+
+      <template  v-slot:append>
+        <div v-if="isLoggedIn" class="pa-2 ">
+          <v-btn @click="logout()" color="red darken-2 white--text" block>
+          <v-icon left>mdi-logout</v-icon>
+            Logout
+          </v-btn>
+        </div>
+      </template>
     </v-navigation-drawer>
 
     <v-app-bar dark color="red darken-2" :clipped-left="primaryDrawer.clipped" app>
@@ -48,11 +71,20 @@
 
       <!--Buttons navBar  -->
       <div class="d-none d-md-flex">
-        <v-btn class="mx-12 px-10" icon v-for="item in menuItems" :key="item.title" router :to="item.link">
-          <v-icon left>{{item.icon}}</v-icon>
-          {{item.title}}
-        </v-btn>
-        <v-btn @click="logout()" class="mx-12 pl-10" icon>
+          <v-btn v-if="isLoggedIn" text class="mt-1">{{currentUser}}</v-btn>
+        <div v-if="!isLoggedIn">
+          <v-btn class="mx-12 px-10" icon v-for="item in menuItemsLogout" :key="item.title" router :to="item.link">
+            <v-icon left>{{item.icon}}</v-icon>
+            {{item.title}}
+          </v-btn>
+        </div>
+        <div v-else>
+          <v-btn class="mx-12 px-10" icon v-for="item in menuItemsLogin" :key="item.title" router :to="item.link">
+            <v-icon left>{{item.icon}}</v-icon>
+            {{item.title}}
+          </v-btn>
+        </div>
+        <v-btn v-if="isLoggedIn" @click="logout()" class="mx-12 pl-10" icon>
           <v-icon left>mdi-logout</v-icon>
           logout
         </v-btn>
@@ -65,29 +97,41 @@
 import firebase from 'firebase';
 export default {
     data() {
-        return {
-      menuItems: [
-        // { icon: "mdi-account-multiple", title: "View Meetup" ,link:"/meetup" },
-        // { icon: "mdi-map-marker", title: "Organize Meetup" ,link:"/meetup/new" },
-        // { icon: "mdi-account-card-details", title: "Explore Meetups" },
-        { icon: "mdi-home", title: "Profile" ,link:"/" },
-        { icon: "mdi-lock", title: "Login" ,link:"/login" },
-        { icon: "mdi-face", title: "Sign in" ,link:"/signin" }
+      return {
+        isLoggedIn: false,
+        currentUser: false,
+        menuItemsLogout: [
+          { icon: "mdi-home", title: "Profile" ,link:"/" },
+          { icon: "mdi-lock", title: "Login" ,link:"/login" },
+          { icon: "mdi-face", title: "Sign in" ,link:"/signin" }
 
-      ],
-      primaryDrawer: {
-        model: false,
-        type: "default (no property)",
-        clipped: false,
-        floating: false,
-        mini: false
+        ],
+        menuItemsLogin: [
+          { icon: "mdi-home", title: "Profile" ,link:"/" },
+          { icon: "mdi-view-dashboard", title: "Dashboard" ,link:"/dashboard" },
+
+        ],
+        primaryDrawer: {
+          model: false,
+          type: "default (no property)",
+          clipped: false,
+          floating: false,
+          mini: false
+        }
+      };
+    },
+    created() {
+      if (firebase.auth().currentUser) {
+        this.isLoggedIn = true;
+        this.currentUser = firebase.auth().currentUser.email;
       }
-    };
     },
     methods: {
       logout(){
         firebase.auth().signOut().then(() => {
-                this.$router.push('login');
+                this.$router.go({ path: this.$router.path });
+                this.isLoggedIn = false;
+                this.currentUser = false;
             })
       }
     },
