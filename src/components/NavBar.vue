@@ -52,12 +52,17 @@
           <v-icon left>{{item.icon}}</v-icon>
           {{item.title}}
         </v-btn>
+        <v-btn @click="logout()" class="mx-12 pl-10" icon>
+          <v-icon left>mdi-logout</v-icon>
+          logout
+        </v-btn>
       </div>
     </v-app-bar>
     </div>
 </template>
 
 <script>
+import firebase from 'firebase';
 export default {
     data() {
         return {
@@ -68,6 +73,7 @@ export default {
         { icon: "mdi-home", title: "Profile" ,link:"/" },
         { icon: "mdi-lock", title: "Login" ,link:"/login" },
         { icon: "mdi-face", title: "Sign in" ,link:"/signin" }
+
       ],
       primaryDrawer: {
         model: false,
@@ -77,6 +83,13 @@ export default {
         mini: false
       }
     };
+    },
+    methods: {
+      logout(){
+        firebase.auth().signOut().then(() => {
+                this.$router.push('login');
+            })
+      }
     },
 }
 </script>

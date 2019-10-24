@@ -8,7 +8,7 @@
                          Sign In 
                         </p>
 
-                            <v-form ref="form" v-model="valid" lazy-validation >
+                            <v-form @submit.prevent="newUser()" ref="form" v-model="valid" lazy-validation >
                                 <v-text-field
                                   v-model="email"
                                   prepend-icon="mdi-account"
@@ -46,12 +46,12 @@
                                 :disabled="!valid"
                                 color="success"
                                 class="mr-4"
-                                @click="validate"
+                                type="submit"
                               >
                                 Create
                                 <v-icon dark right>mdi-check</v-icon>
                               </v-btn>
-                              <v-btn color="error" class="mr-4" @click="reset" router to="/" >
+                              <v-btn color="error" class="mr-4"  router to="/" >
                                   Back
                                 <v-icon dark right>mdi-home</v-icon>
                               </v-btn>
@@ -68,6 +68,9 @@
 
 
 <script>
+import firebase from 'firebase';
+
+
 export default {
      data: () => ({
       valid: true,
@@ -87,5 +90,40 @@ export default {
       ],
       lazy: false,
     }),
+    methods: {
+      newUser(){
+        if (this.passwordConfirm === this.password) {
+          //  console.log(`Esto son los campos user name ${this.email} , password ${this.password}`)
+          
+          firebase.auth().createUserWithEmailAndPassword(this.email,this.password)
+                        .then( () => {
+                          this.$swal({
+                                  toast: true,
+                                  position: 'top-end',
+                                  showConfirmButton: false,
+                                  timer: 3000,
+                                  type: 'success',
+                                  title: 'Success',
+                                  text: 'User Add successful',
+                              });
+                          this.$router.push('/dashboard')
+                        },err =>{
+                           console.log(err);
+                        })
+        }else{
+              this.$swal({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 3000,
+                          type: 'error',
+                          title: 'Error',
+                          text: 'Password not same!',
+                      });
+              this.password ='';
+              this.passwordConfirm='';
+        }
+      }
+    },
 }
 </script>

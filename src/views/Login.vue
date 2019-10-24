@@ -8,7 +8,7 @@
                          Login 
                         </p>
 
-                            <v-form ref="form" v-model="valid" lazy-validation >
+                            <v-form @submit.prevent ="login()" ref="form" v-model="valid" lazy-validation >
                                 <v-text-field
                                   v-model="email"
                                   prepend-icon="mdi-account"
@@ -29,11 +29,10 @@
                                     @click:append="show1 = !show1">
                                 </v-text-field>
                             <div class="mt-10 d-flex justify-center">
-                              <v-btn
+                              <v-btn type="submit"
                                 :disabled="!valid"
                                 color="success"
                                 class="mr-4"
-                                @click="validate"
                               >
                                 Login
                                 <v-icon dark right>mdi-check</v-icon>
@@ -54,6 +53,7 @@
 </template>
 
 <script>
+import firebase from 'firebase';
 export default {
      data: () => ({
       valid: true,
@@ -72,5 +72,36 @@ export default {
       ],
       lazy: false,
     }),
+    methods: {
+       login(){
+                // console.log(`Esto son los campos user name ${this.user_name} , password ${this.password}`)
+          firebase.auth().signInWithEmailAndPassword(this.email,this.password)
+                  .then( (user) => {
+                    this.$swal({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 3000,
+                          type: 'success',
+                          title: 'success',
+                          text: user.user.email,
+                      });
+                      // console.log(user.user.email)
+                    
+                    this.$router.push('/')
+                  },err =>{
+                      this.$swal({
+                          toast: true,
+                          position: 'top-end',
+                          showConfirmButton: false,
+                          timer: 5000,
+                          type: 'error',
+                          title: 'Error',
+                          text: err,
+                      });
+                  })
+
+        }
+    },
 }
 </script>
