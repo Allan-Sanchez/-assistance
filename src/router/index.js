@@ -34,6 +34,14 @@ let router = new VueRouter({
       component: () => import(/* webpackChunkName: "about" */ '../views/Dashboard.vue')
     },
     {
+      path: '/courses',
+      name: 'courses',
+      meta:{
+        requiresAuth:true
+      },
+      component: () => import(/* webpackChunkName: "about" */ '../views/Courses.vue')
+    },
+    {
       path: '/login',
       name: 'login',
       meta:{
@@ -49,6 +57,7 @@ let router = new VueRouter({
       },
       component: () => import(/* webpackChunkName: "about" */ '../views/Signin.vue')
     },
+    
     {
       path: '*',
       meta:{

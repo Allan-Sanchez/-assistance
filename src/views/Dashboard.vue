@@ -21,7 +21,7 @@
               <div class="mb-4 text-center" >
                 <v-spacer></v-spacer>
 
-                <v-btn raised color="success" >Reader QR code</v-btn>
+                <v-btn raised color="teal darken-2" dark >Reader QR code</v-btn>
             
                 
             
@@ -60,10 +60,8 @@
               <div class="mb-4 text-center" >
                 <v-spacer></v-spacer>
 
-                <v-btn raised color="success" class="mx-1" >My Courses</v-btn>
-                <v-btn raised color="success" class="mx-1" >New Course</v-btn>
-            
-                
+                <v-btn raised color="teal darken-2" router to="/courses" dark class="mx-1" >My Courses</v-btn>
+                <!-- <v-btn raised color="teal darken-2" dark class="mx-1" >New Course</v-btn> -->
             
                 <v-spacer></v-spacer>
             
