@@ -234,25 +234,7 @@ export default {
         this.currentUser = firebase.auth().currentUser.email;
         this.idCourse = firebase.auth().currentUser.email;
 
-        // var docRef = db.collection('courses').doc(this.currentUser);
-
-        // docRef.get().then(function(doc) {
-        //   // this.course_key.push(doc)
-        //     if (doc.exists) {
-        //                   console.log(`this ${this}`)
-        //         console.log("Document data:", doc.data());
-        //         console.log(doc.id)
-        //         // const data = doc.data()
-        //         // console.log("Document data:", doc);
-        //     } else {
-        //         // doc.data() will be undefined in this case
-        //         console.log("No such document!");
-        //     }
-
-        // //   // this.course_key.push(data);
-        // }).catch(function(error) {
-        //     console.log("Error getting document:", error);
-        // });
+       
 
         db.collection("courses").doc(this.currentUser).get().then((querySnapshot) => {
           var arrayData = querySnapshot.data().course;
@@ -272,49 +254,58 @@ export default {
     },
    methods: {
      addCourse(){
-       console.log(`User_id ${this.idCourse} curso_name ${this.nameCourse.toUpperCase()} fecha_inicial ${this.date}  description ${this.descriptionCourse}`);
-        // console.log(this.course_key.length)
+
         db.collection("courses").doc(this.idCourse)
           .collection(this.nameCourse.toUpperCase()).doc(this.nameCourse.toLowerCase()).set({
             description: this.descriptionCourse,
             fecha :this.date
           })
           .then(function() {
-                        console.log("Document successfully add!");
-                    });
-
-          db.collection("courses").doc(this.currentUser).update({
-            course: firebase.firestore.FieldValue.arrayUnion(this.nameCourse.toLowerCase())
-          }).then(function() {
-                        console.log("Document successfully updated!");
-                        console.log(this)
-
-                    });
+                  console.log("Document successfully add!");
+              });
 
 
-          db.collection("courses").doc(this.currentUser).get().then((querySnapshot) => {
-          this.course_key = []
-          var arrayData = querySnapshot.data().course;
+           db.collection("courses").doc(this.currentUser).get().then((querySnapshot) => {
+              if (querySnapshot.data()) {
+                  console.log("llege no estaba vacio")
+                  db.collection("courses").doc(this.currentUser).update({
+                    course: firebase.firestore.FieldValue.arrayUnion(this.nameCourse.toLowerCase())
+                    }).then(function() {
+                          console.log("Docu   ment successfully updated!");
+                      });
+              }else{
+                console.log("llege esta vacio")
+                  db.collection("courses").doc(this.currentUser).set({
+                       course:[this.nameCourse.toLowerCase()]
+                     }).then(function() {
+                        console.log("Document successfully written!");
+                    })
+              }
 
-            arrayData.forEach(doc => {
-                this.course_key.push(doc)
+               db.collection("courses").doc(this.currentUser).get().then((querySnapshot) => {
+                this.course_key = []
+                var arrayData = querySnapshot.data().course;
+
+                  arrayData.forEach(doc => {
+                      this.course_key.push(doc)
+                  });
+                      this.course = true
+
+                }).catch(function(error) {
+                  console.log("Error getting document:", error);
+              });
+
+               this.nameCourse = '';
+              this.descriptionCourse ='';
             });
-                this.course = true
-               
-          }).catch(function(error) {
-            console.log("Error getting document:", error);
-        });
-
-
-
+       
        this.dialog = false;
+  
      },
      openQrDialog(){
       this.dialogQR = true;
      },
      generateQR(){
-      //  console.log(`datos seleccionados id ${this.currentUser} curso select ${this.courseSelect} data ${this.dateN}`)
-
         if (this.currentUser != '' || this.courseSelect != '' ||this.dateN != '' ) {
         let data = this.currentUser.concat('/',this.courseSelect,'/',this.dateN);
         this.showQrCode = true
@@ -322,7 +313,8 @@ export default {
         this.dialogQR = false
         }
 
-     }
+     },
+     
    },
 }
 </script>
