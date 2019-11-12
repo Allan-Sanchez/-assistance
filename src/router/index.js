@@ -42,6 +42,14 @@ let router = new VueRouter({
       component: () => import(/* webpackChunkName: "about" */ '../views/Courses.vue')
     },
     {
+      path: '/readerQR',
+      name: 'readerQR',
+      meta:{
+        requiresAuth:true
+      },
+      component: () => import(/* webpackChunkName: "about" */ '../views/ReaderQR.vue')
+    },
+    {
       path: '/login',
       name: 'login',
       meta:{

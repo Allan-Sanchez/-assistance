@@ -142,8 +142,8 @@
 
                               <v-col cols="12">
                                 <v-menu
-                                  ref="menu"
-                                  v-model="menu"
+                                  ref="menuN"
+                                  v-model="menuN"
                                   :close-on-content-click="false"
                                   :return-value.sync="dateN"
                                   transition="scale-transition"
@@ -161,8 +161,8 @@
                                   </template>
                                   <v-date-picker v-model="dateN" no-title scrollable>
                                     <v-spacer></v-spacer>
-                                    <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-                                    <v-btn text color="primary" @click="$refs.menu.save(dateN)">OK</v-btn>
+                                    <v-btn text color="primary" @click="menuN = false">Cancel</v-btn>
+                                    <v-btn text color="primary" @click="$refs.menuN.save(dateN)">OK</v-btn>
                                   </v-date-picker>
                                 </v-menu>
                               </v-col>
@@ -214,6 +214,7 @@ export default {
         date: new Date().toISOString().substr(0, 10),
         dateN: new Date().toISOString().substr(0, 10),
         menu: false,
+        menuN: false,
         dialog: false,
         dialogQR: false,
         idCourse:false,

@@ -21,7 +21,7 @@
               <div class="mb-4 text-center" >
                 <v-spacer></v-spacer>
 
-                <v-btn raised color="teal darken-2" dark >Reader QR code</v-btn>
+                <v-btn raised color="teal darken-2" dark  router to="/readerQR">Reader QR code</v-btn>
             
                 
             
